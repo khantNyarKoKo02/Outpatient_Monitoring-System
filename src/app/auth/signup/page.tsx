@@ -8,56 +8,64 @@ import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useSignupUser } from "@/app/hooks/useAuthApi";
-import { getToken, login } from "@/service/authService";
-import { signUpDataType } from "@/types/userTypes";
 import Link from "next/link";
+import { useAuth } from "@/app/contexts/AuthContext";
+import { signUpDataType } from "@/types/userTypes";
 
 const Signup: React.FC = () => {
   const router = useRouter();
-  const [user, setUser] = useState<signUpDataType>({
-    username: "",
+
+  const [signUpData, setSignUpData] = useState<signUpDataType>({
     email: "",
     password: "",
     confirmPassword: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [samePassword, setSamePassword] = useState(true);
   const [loading, setLoading] = useState(false);
+  
   const signUpMutation = useSignupUser();
+  const { login } = useAuth();
 
   useEffect(() => {
-    const handleSuccess = async () => {
-      if (signUpMutation.isSuccess) {
-        const authToken = getToken();
-        if (authToken) login(authToken);
-        toast.success("Signup success");
-        router.push("/auth/login");
-      }
-    };
-    if (signUpMutation.isSuccess) {
-      handleSuccess();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [signUpMutation.isSuccess]);
+    setSamePassword(signUpData.password === signUpData.confirmPassword);
+  }, [signUpData.confirmPassword, signUpData.password]);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  useEffect(() => {
+    if (signUpMutation.isSuccess) {
+      toast.success("Sign up successful! Please log in.");
+      router.push("/auth/login");
+    }
+  }, [signUpMutation.isSuccess, login, router]);
+
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    signUpMutation.mutate(user, {
-      onError: (error: any) => {
-        toast.error(error.message);
-      },
-      onSettled: () => {
-        setLoading(false);
-      },
-    });
+
+    if (!samePassword) {
+      toast.error("Passwords do not match!");
+      setLoading(false);
+      return;
+    }
+
+    if (signUpData.email && signUpData.password) {
+      signUpMutation.mutate(signUpData, {
+        onError: (error: any) => {
+          toast.error(error.message);
+        },
+        onSettled: () => {
+          setLoading(false);
+        },
+      });
+    }
   };
 
   return (
     <div className="flex h-screen">
       {/* Left section with image */}
       <div className="flex w-full md:w-1/2 justify-center items-center h-screen bg-white">
-        <form onSubmit={handleLogin} className="w-80 p-6">
+        <form onSubmit={handleSignup} className="w-80 p-6">
           <h3 className="text-3xl text-black font-semibold text-center mb-8 font-noto">
             Sign Up
           </h3>
@@ -65,19 +73,12 @@ const Signup: React.FC = () => {
           <div className=" flex flex-col justify-center items-center gap-6">
             <input
               type="text"
-              value={user.username}
-              onChange={(e) => setUser({ ...user, username: e.target.value })}
+              value={signUpData.email}
+              onChange={(e) =>
+                setSignUpData({ ...signUpData, email: e.target.value })
+              }
               className="w-[300px] text-black px-4 py-2 border border-primary rounded-lg  focus:outline-none focus:ring-2 focus:ring-primaryactive"
-              placeholder="Username"
-              required
-              aria-label="Username"
-            />
-            <input
-              type="text"
-              value={user.email}
-              onChange={(e) => setUser({ ...user, email: e.target.value })}
-              className="w-[300px] text-black px-4 py-2 border border-primary rounded-lg  focus:outline-none focus:ring-2 focus:ring-primaryactive"
-              placeholder="Email"
+              placeholder="Enter Email"
               required
               aria-label="Email"
             />
@@ -85,10 +86,12 @@ const Signup: React.FC = () => {
             <div className="relative w-[300px]">
               <input
                 type={showPassword ? "text" : "password"}
-                value={user.password}
-                onChange={(e) => setUser({ ...user, password: e.target.value })}
+                value={signUpData.password}
+                onChange={(e) =>
+                  setSignUpData({ ...signUpData, password: e.target.value })
+                }
                 className="w-full text-black px-4 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-primaryactive"
-                placeholder="Password"
+                placeholder="Enter Password"
                 required
                 aria-label="Password"
               />
@@ -104,12 +107,15 @@ const Signup: React.FC = () => {
             <div className="relative w-[300px]">
               <input
                 type={showConfirmPassword ? "text" : "password"}
-                value={user.confirmPassword}
+                value={signUpData.confirmPassword}
                 onChange={(e) =>
-                  setUser({ ...user, confirmPassword: e.target.value })
+                  setSignUpData({
+                    ...signUpData,
+                    confirmPassword: e.target.value,
+                  })
                 }
                 className="w-full text-black px-4 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-primaryactive"
-                placeholder="Confirm Password"
+                placeholder="Enter Confirm Password"
                 required
                 aria-label="Confirm Password"
               />
@@ -125,8 +131,16 @@ const Signup: React.FC = () => {
               </button>
             </div>
             <div className="flex items-center justify-center gap-2 mb-4 w-[300px]">
-              <p className=" text-slate-500 text-sm"> Already have an account?</p>
-              <Link href="/auth/login" className="text-sm text-primary underline">Login</Link>
+              <p className=" text-slate-500 text-sm">
+                {" "}
+                Already have an account?
+              </p>
+              <Link
+                href="/auth/login"
+                className="text-sm text-primary underline"
+              >
+                Login
+              </Link>
             </div>
             <button
               type="submit"

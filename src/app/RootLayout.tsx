@@ -1,12 +1,7 @@
 import React from "react";
-import { Metadata } from "next";
 import "./globals.css";
 import { QueryClient, QueryClientProvider } from "react-query";
-
-export const metadata: Metadata = {
-  title: "My Next.js App",
-  description: "A description of my app",
-};
+import { AuthProvider } from "./contexts/AuthContext";
 
 const queryClient = new QueryClient();
 
@@ -15,7 +10,9 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
     <html lang="en">
       <body>
         <QueryClientProvider client={queryClient}>
-          <main>{children}</main>
+          <AuthProvider>
+            <main>{children}</main>
+          </AuthProvider>
         </QueryClientProvider>
       </body>
     </html>

@@ -1,21 +1,43 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { login } from "@/service/authService";
 import { signInDataType, signUpDataType } from "@/types/userTypes";
 import axios from "axios";
-import { BaseURL } from "@/service/ApiEndpoints";
+
+
+export const signUpUser = async (user: signUpDataType) => {
+  const { email, password } = user;
+
+  try {
+    const response = await axios.post(
+      "/auth/signup",
+      { email, password },
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error: any) {
+    console.error(
+      "Sign-up error:",
+      error.response?.data.message || error.message
+    );
+    throw new Error(
+      error.response?.data.message || "An error occurred during sign up"
+    );
+  }
+};
 
 export const signInUser = async ({ user }: { user: signInDataType }) => {
   try {
-    const response = await axios.post(`${BaseURL}/auth/signin`, user, {
+    const response = await axios.post("/auth/signin", user, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
     });
-
-    const token = response.data.access_token;
-
-    login(token);
 
     return response.data;
   } catch (error: any) {
@@ -28,29 +50,3 @@ export const signInUser = async ({ user }: { user: signInDataType }) => {
     );
   }
 };
-
-export const signUpUser = async ({ user }: { user: signUpDataType }) => {
-    try {
-      const response = await axios.post(`${BaseURL}/auth/signup`, user, {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
-  
-      const token = response.data.access_token;
-  
-      login(token);
-  
-      return response.data;
-    } catch (error: any) {
-      console.error(
-        "Sign-up error:",
-        error.response?.data.message || error.message
-      );
-      throw new Error(
-        error.response?.data.message || "An error occurred during sign up"
-      );
-    }
-  };
-  
