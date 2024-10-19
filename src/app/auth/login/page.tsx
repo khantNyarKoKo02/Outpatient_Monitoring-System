@@ -8,41 +8,44 @@ import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useSigninUser } from "@/app/hooks/useAuthApi";
-import { getToken, login } from "@/service/authService";
 import { signInDataType } from "@/types/userTypes";
 import Link from "next/link";
+import { useAuth } from "@/app/contexts/AuthContext";
+import { getToken } from "@/service/authService";
 
 const Login: React.FC = () => {
   const router = useRouter();
   const [user, setUser] = useState<signInDataType>({
-    username: "",
+    email: "",
     password: "",
   });
+
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const signInMutation = useSigninUser();
+  const {login} = useAuth();
 
   useEffect(() => {
-    const handleSuccess = async () => {
       if (signInMutation.isSuccess) {
         const authToken = getToken();
         if (authToken) login(authToken);
         toast.success("Login success");
         router.push("/");
       }
-    };
-    if (signInMutation.isSuccess) {
-      handleSuccess();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [signInMutation.isSuccess]);
+  }, [login, router, signInMutation.isSuccess]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
+    
     signInMutation.mutate(user, {
       onError: (error: any) => {
-        toast.error(error.message);
+        if (error.response) {
+          toast.error(error.response.data.message || "Login failed. Please try again.");
+        } else {
+          toast.error("An unexpected error occurred.");
+        }
       },
       onSettled: () => {
         setLoading(false);
@@ -69,12 +72,12 @@ const Login: React.FC = () => {
           <div className=" flex flex-col justify-center items-center gap-6">
             <input
               type="text"
-              value={user.username}
-              onChange={(e) => setUser({ ...user, username: e.target.value })}
+              value={user.email}
+              onChange={(e) => setUser({ ...user, email: e.target.value })}
               className="w-[300px] text-black px-4 py-2 border border-primary rounded-lg  focus:outline-none focus:ring-2 focus:ring-primaryactive"
-              placeholder="Username or Email"
+              placeholder="Enter Email"
               required
-              aria-label="Username or Email"
+              aria-label="Email"
             />
 
             <div className="relative w-[300px]">
@@ -83,7 +86,7 @@ const Login: React.FC = () => {
                 value={user.password}
                 onChange={(e) => setUser({ ...user, password: e.target.value })}
                 className="w-full text-black px-4 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-primaryactive"
-                placeholder="Password"
+                placeholder="Enter Password"
                 required
                 aria-label="Password"
               />
