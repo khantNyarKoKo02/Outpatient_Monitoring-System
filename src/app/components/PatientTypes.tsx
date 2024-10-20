@@ -1,6 +1,5 @@
 "use client"
 import { PatientDiagnose } from "@/types/patientTypes";
-import React, { useState } from "react";
 
 const DiagnoseCard: React.FC<PatientDiagnose> = ({ patientNum, diagnose }) => (
   <div className="flex flex-col justify-between items-center bg-white  hover:bg-gray-50 rounded-2xl w-[150px] gap-1 py-2">
@@ -14,7 +13,7 @@ const DiagnoseCard: React.FC<PatientDiagnose> = ({ patientNum, diagnose }) => (
 );
 
 const PatientTypes: React.FC = () => {
-    const [diagnoses, setDiagnoses] = useState<PatientDiagnose[]>([]);
+    // const [diagnoses, setDiagnoses] = useState<PatientDiagnose[]>([]);
 
   return (
     <div className="flex justify-between items-center gap-4 w-full">
