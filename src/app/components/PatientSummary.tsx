@@ -1,9 +1,14 @@
-import React from 'react'
+import React from "react";
+import OverviewPatient from "./OverviewPatient";
+import PatientTypes from "./PatientTypes";
 
-const PatientSummary = () => {
+const PatientSummary: React.FC = () => {
   return (
-    <div>PatientSummary</div>
-  )
-}
+    <div className="flex flex-col justify-between items-center gap-6">
+      <OverviewPatient/>
+      <PatientTypes/>
+    </div>
+  );
+};
 
-export default PatientSummary
+export default PatientSummary;
