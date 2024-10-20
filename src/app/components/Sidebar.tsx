@@ -42,7 +42,7 @@ const Sidebar = () => {
         </button>
         <hr className="opacity-20" />
         <div className="flex items-center gap-3 py-3">
-          <Image src={profile} alt="Profile" className="w-12 h-12 rounded-full" />
+          <Image src={profile} alt="Profile" className="w-12 h-12 rounded-full object-cover" />
           <p className="text-sm">Emma Watson</p>
         </div>
       </div>
