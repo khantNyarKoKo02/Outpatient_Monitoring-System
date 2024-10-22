@@ -1,5 +1,5 @@
 "use client";
-import { OutpatientTableTypes } from "@/types/patientTypes";
+import { DropdownPatient, OutpatientTableTypes } from "@/types/patientTypes";
 import React, { createContext, useContext, useRef, useState } from "react";
 
 const OutpatientTableContext = createContext<OutpatientTableTypes | undefined>(
@@ -16,16 +16,39 @@ export const OutpatientTableProvider: React.FC<{
       const originalContent = document.body.innerHTML;
       const printContent = tableRef.current.innerHTML;
 
+      
       document.body.innerHTML = printContent;
+      document.body.style.backgroundColor = "white";
+
       window.print();
 
       document.body.innerHTML = originalContent;
     }
   };
+  
 
+  // Add Patient Button
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  // Dropdown Bar
+
+  const stats: DropdownPatient[] = [
+    { title: "Total Outpatients" },
+    { title: "Treated Outpatients" },
+    { title: "Untreated Outpatients" },
+  ];
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedTitle, setSelectedTitle] = useState(stats[0].title); 
+
+  const toggleDropdown = () => setIsOpen((prev) => !prev);
+
+  const handleSelect = (title: string) => {
+    setSelectedTitle(title);
+    setIsOpen(false); 
+  };
 
 
   // table body
@@ -50,7 +73,12 @@ export const OutpatientTableProvider: React.FC<{
         handlePageChange,
         openModal,
         closeModal,
-        isModalOpen
+        isModalOpen,
+        isOpen,
+        selectedTitle,
+        toggleDropdown,
+        handleSelect,
+        stats
       }}
     >
       {children}
