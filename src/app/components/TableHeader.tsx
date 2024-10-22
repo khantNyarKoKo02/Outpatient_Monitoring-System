@@ -28,7 +28,7 @@ const HeaderButton: React.FC<{
 
 const TableHeader = () => {
 
-    const  {handlePrint , openModal, closeModal, isModalOpen} = useOutpatientTable();
+    const  {handlePrint , openModal, closeModal, isModalOpen, selectedTitle} = useOutpatientTable();
 
     const [patients, setPatients] = useState<Patient[]>([]);
     console.log(patients);
@@ -44,7 +44,7 @@ const TableHeader = () => {
   return (
     <>
         <div className="flex justify-between items-center">
-    <h4 className="text-xl text-black">Outpatient Lists</h4>
+    <h4 className="text-xl text-black">{selectedTitle}</h4>
     <div className="flex gap-4 items-center">
       <HeaderButton
         onClick={handlePrint} 

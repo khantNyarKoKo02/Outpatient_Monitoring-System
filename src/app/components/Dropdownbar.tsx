@@ -1,27 +1,14 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { FaChevronDown } from "react-icons/fa6";
-import { DropdownPatient } from "@/types/patientTypes";
-
-const stats: DropdownPatient[] = [
-  { title: "Total Outpatients" },
-  { title: "Treated Outpatients" },
-  { title: "Untreated Outpatients" },
-];
+import { useOutpatientTable } from "../contexts/OutpatientTableContext";
 
 const Dropdownbar: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedTitle, setSelectedTitle] = useState(stats[0].title); 
 
-  const toggleDropdown = () => setIsOpen((prev) => !prev);
-
-  const handleSelect = (title: string) => {
-    setSelectedTitle(title);
-    setIsOpen(false); 
-  };
+  const {isOpen, selectedTitle, toggleDropdown, handleSelect, stats} = useOutpatientTable();
 
   return (
-    <div className="relative w-[180px]">
+    <div className="relative w-[190px]">
       <button
         onClick={toggleDropdown}
         className="flex justify-between items-center w-full bg-white px-4 py-2 rounded-lg border"

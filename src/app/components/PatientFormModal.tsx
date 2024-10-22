@@ -10,7 +10,7 @@ const PatientFormModal: React.FC<PatientFormModalProps> = ({
   const [formData, setFormData] = useState<Patient>({
     id: 0,
     name: "",
-    age: 0,
+    dob: "",
     gender: "Male",
     contact: "",
     bloodType: "A",
@@ -40,19 +40,6 @@ const PatientFormModal: React.FC<PatientFormModalProps> = ({
       <div className="bg-white p-8 rounded-lg shadow-lg w-[500px] max-w-full">
         <h2 className="text-2xl mb-6 text-black">Patient Personal Information</h2>
         <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-3 text-black">
-          <div className="col-span-2">
-            <label className="block text-sm font-medium mb-1">Patient ID</label>
-            <input
-              type="number"
-              name="id"
-              className="w-full border rounded px-3 py-2"
-              placeholder="Enter Patient ID"
-              value={formData.id}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
           <div>
             <label className="block text-sm font-medium mb-1">Name</label>
             <input
@@ -67,18 +54,20 @@ const PatientFormModal: React.FC<PatientFormModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Age</label>
-            <input
-              type="number"
-              name="age"
-              className="w-full border rounded px-3 py-2"
-              placeholder="Enter Age"
-              value={formData.age}
-              onChange={handleChange}
-              required
-              min={0}
-            />
-          </div>
+  <label className="block text-sm font-medium mb-1" htmlFor="dob">
+    Date of Birth
+  </label>
+  <input
+    type="date"
+    id="dob"
+    name="dob"
+    className="w-full border rounded px-3 py-2"
+    value={formData.dob}
+    onChange={handleChange}
+    required
+  />
+</div>
+
 
           <div>
             <label className="block text-sm font-medium mb-1">Gender</label>

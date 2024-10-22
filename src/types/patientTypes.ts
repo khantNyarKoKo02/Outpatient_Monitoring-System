@@ -29,6 +29,11 @@ export type OutpatientTableTypes = {
   isModalOpen: boolean;
   openModal: () => void;
   closeModal: () => void;
+  isOpen: boolean;
+  selectedTitle: string;
+  toggleDropdown: () => void
+  handleSelect: (title : string) => void;
+  stats :  DropdownPatient[]
 };
 
 export type PatientFormModalProps = {
@@ -40,7 +45,7 @@ export type PatientFormModalProps = {
 export type Patient = {
   id: number;
   name: string;
-  age: number;
+  dob: string;
   gender: string;
   contact: string;
   bloodType: string;
