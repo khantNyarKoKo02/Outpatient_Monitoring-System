@@ -8,12 +8,12 @@ import { RxCrossCircled } from "react-icons/rx";
 
 
 const PatientProfile: React.FC = () => {
-    const [istreated, isSetTreated] = useState(false);
+    const [istreated, isSetTreated] = useState(true);
     console.log(isSetTreated);
     
 
     return (
-        <div className="bg-white px-6 py-8 rounded flex flex-col items-center gap-4 w-1/3">
+        <div className="bg-white px-6 py-8 rounded-lg flex flex-col items-center gap-4 w-1/3">
         <div className="flex items-center justify-between px-6 gap-6 w-full">
           <Image
             className="w-[80px] p-2 bg-primary rounded-full"
