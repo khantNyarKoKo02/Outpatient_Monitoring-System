@@ -4,13 +4,13 @@ import { BsCheck, BsX } from "react-icons/bs";
 
 const TreatmentStatus: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [status, setStatus] = useState(true); // true = Treated, false = Untreated
+  const [status, setStatus] = useState(true); 
 
   const toggleDropdown = () => setIsOpen((prev) => !prev);
 
   const handleSelect = (selectedStatus: boolean) => {
     setStatus(selectedStatus);
-    setIsOpen(false); // Close the dropdown after selection
+    setIsOpen(false); 
   };
 
   return (

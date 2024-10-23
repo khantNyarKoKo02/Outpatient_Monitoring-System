@@ -51,6 +51,6 @@ export type Patient = {
   bloodType: string;
   email: string;
   address: string;
-  diagnosis: string;
-  treated: boolean;
+  diagnosis?: string;
+  treated?: boolean;
 };
